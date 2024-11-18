@@ -86,6 +86,11 @@
             // numericUpDown
             // 
             this.numericUpDown.Location = new System.Drawing.Point(206, 91);
+            this.numericUpDown.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
             this.numericUpDown.Name = "numericUpDown";
             this.numericUpDown.Size = new System.Drawing.Size(143, 20);
             this.numericUpDown.TabIndex = 1;
@@ -164,11 +169,11 @@
             // 
             // buttonCalculate
             // 
-            this.buttonCalculate.Location = new System.Drawing.Point(123, 258);
+            this.buttonCalculate.Location = new System.Drawing.Point(129, 494);
             this.buttonCalculate.Name = "buttonCalculate";
             this.buttonCalculate.Size = new System.Drawing.Size(119, 27);
             this.buttonCalculate.TabIndex = 3;
-            this.buttonCalculate.Text = "Вычислить";
+            this.buttonCalculate.Text = "Сравнить";
             this.buttonCalculate.UseVisualStyleBackColor = true;
             this.buttonCalculate.Click += new System.EventHandler(this.ButtonCalculateClick);
             // 
@@ -326,11 +331,11 @@
             // 
             // buttonCompare
             // 
-            this.buttonCompare.Location = new System.Drawing.Point(129, 495);
+            this.buttonCompare.Location = new System.Drawing.Point(123, 258);
             this.buttonCompare.Name = "buttonCompare";
             this.buttonCompare.Size = new System.Drawing.Size(119, 27);
             this.buttonCompare.TabIndex = 3;
-            this.buttonCompare.Text = "Сравнить";
+            this.buttonCompare.Text = "Вычислить";
             this.buttonCompare.UseVisualStyleBackColor = true;
             // 
             // button3
