@@ -26,10 +26,11 @@ namespace C_LABA_8
         private int[] M2 = new int[SIZE];
         private Random rnd = new Random();
         private int[] MOA = new int[SIZE];
-        private double sComparisons = 0;
+        private List<int>[] MC = new List<int>[SIZE];
+
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         /// <summary>
@@ -46,8 +47,7 @@ namespace C_LABA_8
             return heshKey;
         }
 
-
-        void CreateHashTableAndFindArray()
+        void CreateHashTableOpenAddress()
         {
             for (int i = 0; i < SIZE; i++)
             {
@@ -60,16 +60,16 @@ namespace C_LABA_8
                 }
                 else
                 {
-                    for (int j = hashCode; j < SIZE - 1; j++)
+                    for (int j = hashCode; j < SIZE; j++)
                     {
                         if (MOA[j] == 0)
                         {
                             MOA[j] = M1[i];
                             break;
                         }
-                        if (j == SIZE - 2)
+                        if (j == SIZE - 1)
                         {
-                            for (int k = 0; k < hashCode - 1; k++)
+                            for (int k = 0; k < hashCode; k++)
                             {
                                 if (MOA[k] == 0)
                                 {
@@ -87,9 +87,21 @@ namespace C_LABA_8
                     if (!flag) break;
                 }
             }
-            for (int i = 0;i < SIZE; i++)
+        }
+
+        void CreateHashTableСhainsMethod()
+        {
+            for (int i = 0; i < SIZE; i++)
             {
-                M2[i] = rnd.Next(1, 20000);
+                int hash = GetHashCodeMultiplicationMethod(M1[i], SIZE);
+                if (MC[hash] == null)
+                {
+                    MC[hash] = new List<int>() { M1[i] };
+                }
+                else
+                {
+                    MC[hash].Add(M1[i]);
+                }
             }
         }
 
@@ -100,59 +112,95 @@ namespace C_LABA_8
         /// <param name="e">...</param>
         private void ButtonCalculateClick(object sender, EventArgs e)
         {
-            
-            int theFoundElements = 0;
-            CreateHashTableAndFindArray();
-            int StartTime = Environment.TickCount;
+            int foundKeysChain = 0;
+            int comparisonsChain = 0;
+            double comparChain = 0;
+            int foundKeys = 0;
+            int comparisons = 0;
+            double compar = 0;
+
+            CreateHashTableOpenAddress();
+            CreateHashTableСhainsMethod();
+
+            // Заполнение поискового массива ключами.
+            for (int i = 0; i < SIZE; i++)
+            {
+                M2[i] = rnd.Next(1, 20000);
+            }
+
+            int StartTimeA = Environment.TickCount;
             {
                 for (int i = 0; i < SIZE; i++)
                 {
-                    int comparisons = 0;
+                    comparisons = 0;
                     int hashCode = GetHashCodeMultiplicationMethod(M2[i], SIZE);
                     if (MOA[hashCode] == M2[i])
                     {
                         comparisons++;
-                        theFoundElements++;
+                        foundKeys++;
                     }
                     else
                     {
-                        for (int j = hashCode; j < SIZE - 1; j++)
+                        for (int j = hashCode + 1; j < SIZE; j++)
                         {
                             if (MOA[j] == M2[i])
                             {
                                 comparisons++;
-                                theFoundElements++;
+                                foundKeys++;
                                 break;
                             }
                             comparisons++;
-                            if (j == SIZE - 2)
+                            if (j == SIZE - 1)
                             {
-                                for (int k = 0; k < hashCode - 1; k++)
+                                for (int k = 0; k < hashCode; k++)
                                 {
                                     if (MOA[k] == M2[i])
                                     {
                                         comparisons++;
-                                        theFoundElements++;
-                                        break;
-                                    }
-                                    if (k == hashCode - 2)
-                                    {
-                                        comparisons++;
+                                        foundKeys++;
                                         break;
                                     }
                                     comparisons++;
                                 }
+                                break;
                             }
                         }
-                        sComparisons += comparisons;
                     }
+                    compar += comparisons;
                 }
-                sComparisons /= SIZE;
-                int ResultTime = Environment.TickCount - StartTime;
-                textBoxTimeOpenAdres.Text = ResultTime.ToString();
-                textBoxComparsionOpenAdres.Text = sComparisons.ToString("F2");
-                textBoxFindOpenAdres.Text = theFoundElements.ToString();
+                compar /= SIZE;
             }
+            int ResultTimeA = Environment.TickCount - StartTimeA;
+            textBoxTimeOpenAdres.Text = ResultTimeA.ToString();
+            textBoxComparsionOpenAdres.Text = compar.ToString("F2");
+            textBoxFindOpenAdres.Text = foundKeys.ToString();
+
+            int StartTimeB = Environment.TickCount;
+            {
+                for (int i = 0; i < SIZE; i++)
+                {
+                    comparisonsChain = 0;
+                    int hashCode = GetHashCodeMultiplicationMethod(M2[i], SIZE);
+                    if (MC[hashCode] != null)
+                    {
+                        for (int j = 0; j < MC[hashCode].Count; j++)
+                        {
+                            comparisonsChain++;
+                            if (MC[hashCode][j] == M2[i])
+                            {
+                                foundKeysChain++;
+                                break;
+                            }
+                        }
+                    }
+                    comparChain += comparisonsChain;
+                }
+            }
+            comparChain /= SIZE;
+            int ResultTimeB = Environment.TickCount - StartTimeB;
+            textBoxTimeChain.Text = ResultTimeB.ToString();
+            textBoxComparisonChain.Text = comparChain.ToString("F2");
+            textBoxFindChain.Text = foundKeys.ToString();
         }
 
         private void ButtonExitClick(object sender, EventArgs e)
@@ -249,7 +297,7 @@ namespace C_LABA_8
         //    hashCode %= (int)Math.Pow(10, hashSize);
         //    return (int)hashCode;
         //}
-       
+
 
         //public int GetHashCodeDivisionMethod(int key, int m)
         //{
@@ -311,6 +359,6 @@ namespace C_LABA_8
         //textBoxFolding.Text = t2.ToString();
         //textBoxMiddleOfSquare.Text = t3.ToString();
         //textBoxMultiplication.Text = t4.ToString();
-
     }
 }
+
