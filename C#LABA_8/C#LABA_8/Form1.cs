@@ -26,7 +26,7 @@ namespace C_LABA_8
         private int[] M2 = new int[SIZE];
         private Random rnd = new Random();
         private int[] MOA = new int[SIZE];
-
+        private double sComparisons = 0;
         private void Form1_Load(object sender, EventArgs e)
         {
             
@@ -52,7 +52,7 @@ namespace C_LABA_8
             for (int i = 0; i < SIZE; i++)
             {
                 bool flag = true;
-                M1[i] = rnd.Next(0, SIZE);
+                M1[i] = rnd.Next(1, SIZE);
                 int hashCode = GetHashCodeMultiplicationMethod(M1[i], SIZE);
                 if (MOA[hashCode] == 0)
                 {
@@ -89,7 +89,7 @@ namespace C_LABA_8
             }
             for (int i = 0;i < SIZE; i++)
             {
-                M2[i] = rnd.Next(0, 20000);
+                M2[i] = rnd.Next(1, 20000);
             }
         }
 
@@ -100,13 +100,14 @@ namespace C_LABA_8
         /// <param name="e">...</param>
         private void ButtonCalculateClick(object sender, EventArgs e)
         {
-            int comparisons = 0;
+            
             int theFoundElements = 0;
             CreateHashTableAndFindArray();
             int StartTime = Environment.TickCount;
             {
                 for (int i = 0; i < SIZE; i++)
                 {
+                    int comparisons = 0;
                     int hashCode = GetHashCodeMultiplicationMethod(M2[i], SIZE);
                     if (MOA[hashCode] == M2[i])
                     {
@@ -143,11 +144,13 @@ namespace C_LABA_8
                                 }
                             }
                         }
+                        sComparisons += comparisons;
                     }
                 }
+                sComparisons /= SIZE;
                 int ResultTime = Environment.TickCount - StartTime;
                 textBoxTimeOpenAdres.Text = ResultTime.ToString();
-                textBoxComparsionOpenAdres.Text = comparisons.ToString();
+                textBoxComparsionOpenAdres.Text = sComparisons.ToString("F2");
                 textBoxFindOpenAdres.Text = theFoundElements.ToString();
             }
         }
